@@ -32,7 +32,9 @@ public class jfNuevo extends javax.swing.JFrame {
         Image iconoCarrito2 = iconoCarrito.getImage().getScaledInstance(40, 40, java.awt.Image.SCALE_SMOOTH);
         ImageIcon iconoCarritoEscalado = new ImageIcon(iconoCarrito2);
         jbAgregar.setIcon(iconoCarritoEscalado);
-        
+        // CAMBIE DE ITEM 1,2,3, ECT A CATEGORIAS REALES.
+        jcbTabla.setModel(new javax.swing.DefaultComboBoxModel<>(
+        new String[] { "Electrónica", "Ropa", "Hogar", "Alimentos", "Otros" } ));
     }
 
     /**
@@ -80,6 +82,11 @@ public class jfNuevo extends javax.swing.JFrame {
         jcbTabla.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jbAgregar.setText("Agregar");
+        jbAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbAgregarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpCategoriasLayout = new javax.swing.GroupLayout(jpCategorias);
         jpCategorias.setLayout(jpCategoriasLayout);
@@ -176,6 +183,56 @@ public class jfNuevo extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    // METODO PARA VALIDAR que los campos no esten vacios, OBTENER los valores ingresados, AGREGAR la fila a la tabla.
+    private void jbAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAgregarActionPerformed
+        // TODO add your handling code here:
+         // Obtener valores de los campos
+    String categoria = jcbTabla.getSelectedItem().toString();
+    String nombre = jtNombre.getText().trim();
+    String precioTexto = jtPrecio.getText().trim();
+
+    // Validar campos vacíos
+    if (nombre.isEmpty() || precioTexto.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Por favor, complete todos los campos.",
+                "Campos incompletos",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Validar que el precio sea numérico
+    double precio;
+    try {
+        precio = Double.parseDouble(precioTexto);
+        if (precio < 0) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "El precio no puede ser negativo.",
+                    "Error en el precio",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    } catch (NumberFormatException e) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Ingrese un precio válido.",
+                "Error en el precio",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Agregar producto a la tabla
+    modelo.addRow(new Object[]{nombre, categoria, precio});
+
+    // Limpiar campos
+    jtNombre.setText("");
+    jtPrecio.setText("");
+    jcbTabla.setSelectedIndex(0);
+
+    // Confirmación
+    javax.swing.JOptionPane.showMessageDialog(this,
+            "Producto agregado correctamente.",
+            "Éxito",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jbAgregarActionPerformed
 
     /**
      * @param args the command line arguments
